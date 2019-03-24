@@ -103,10 +103,12 @@ let state = {
 }
 
 
-const main_engine_accel = 40; // meter per second ? 
+const main_engine_accel = 100; // meter per second ? 
 const orientation_jet_acceleration = Math.PI / 2; // PI/8 per second
+const d_a_gravity = [0, 40]; // positive downward
 
 const pixel_per_meter = 4;
+
 
 
 function step(timestamp) {
@@ -120,9 +122,8 @@ function step(timestamp) {
    
     const d_t_seconds = (timestamp - last_timestamp) / 1000;
 
-    // TODO add gravity
-    const d_a = up_pressed ? [Math.cos(state.orientation) * main_engine_accel, -Math.sin(state.orientation) * main_engine_accel] : [0, 0]
-
+    const d_a_engine = up_pressed ? [Math.cos(state.orientation) * main_engine_accel, -Math.sin(state.orientation) * main_engine_accel] : [0, 0]
+    const d_a = d_a_engine.map((c, i) => c + d_a_gravity[i]);
 
     let d_a_a;
     if (left_pressed && !right_pressed) {
