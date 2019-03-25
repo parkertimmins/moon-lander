@@ -100,9 +100,6 @@ function draw_state(state) {
 }
 
 
-const LEFT_ARROW = 37
-const UP_ARROW = 38
-const RIGHT_ARROW = 39
 
 let up_pressed = false;
 let left_pressed = false;
@@ -167,23 +164,29 @@ function step(timestamp) {
     window.requestAnimationFrame(step);
 }
 
+const LEFT_ARROW = 37
+const UP_ARROW = 38
+const RIGHT_ARROW = 39
+const W = 87
+const A = 65
+const D = 68
 window.onload = function () {
 	window.addEventListener("keydown", event => {
-		if (event.keyCode === LEFT_ARROW) {
+		if (event.keyCode === LEFT_ARROW || event.keyCode === W) {
 			left_pressed = true;
-		} else if (event.keyCode === RIGHT_ARROW) {
+		} else if (event.keyCode === RIGHT_ARROW || event.keyCode === D) {
 			right_pressed = true;
-		} else if (event.keyCode === UP_ARROW) {
+		} else if (event.keyCode === UP_ARROW || event.keyCode === A) {
 			up_pressed = true;
 		}
 	});
 	
 	window.addEventListener("keyup", event => {
-		if (event.keyCode === LEFT_ARROW) {
+		if (event.keyCode === LEFT_ARROW || event.keyCode === W) {
 			left_pressed = false;
-		} else if (event.keyCode === RIGHT_ARROW) {
+		} else if (event.keyCode === RIGHT_ARROW || event.keyCode === D) {
 			right_pressed = false;
-		} else if (event.keyCode === UP_ARROW) {
+		} else if (event.keyCode === UP_ARROW || event.keyCode === A) {
 			up_pressed = false;
 		}
 	});
