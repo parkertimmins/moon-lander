@@ -1,9 +1,14 @@
 
+
+function toRad(degree) {
+    return degree * Math.PI / 180
+}
+
 function combine_acceleration(previous, current) {
     return previous.map((c, i) => (c + current[i]) / 2);
 }
 
-// applies to bot
+// not just for a and v, can be v and x
 function scale_add(d_t, a, old_v) {
     const d_v = a.map(c => c * d_t);
     return old_v.map((c, i) => c + d_v[i]);
@@ -31,7 +36,6 @@ function get_next_state(d_t, state, d_a, d_a_a) {
     }
 }
 
-
 function clear_canvas() {
     const canvas = document.getElementById("canvas-refreshing");
     const context = canvas.getContext('2d');
@@ -48,36 +52,51 @@ function draw_square(right, down, square_size, color) {
     ctx.closePath();
 }
 
-function draw_state(state) {
-    const width = 20;
-    const height = 80;
+function draw_image_lander(state) {
+   // const img = new Image(); 
+    //img.src = 'lander.svg';
+    //
+    //
 
+    const img = document.getElementById("lander");
 
     const canvas = document.getElementById("canvas-refreshing");
     const ctx = canvas.getContext("2d");
 
-    //console.log(state);
-    //console.log(state.orientation);
-    //console.log(state.angular_velocity);
-    console.log(state.angular_acceleration);
-    console.log(state.distance);
-
-    //ctx.translate( x+width/2, y+height/2 );
 
     ctx.save();
     ctx.translate(state.distance[0], state.distance[1]);
     
     ctx.rotate(-state.orientation[0]);
-    //ctx.translate(-state.distance[0], -state.distance[1]);
-    
-    ctx.beginPath();
-    ctx.fillStyle = 'red';
+   
+
+    ctx.drawImage(img, -img.height/2, -img.width/2);
     //ctx.fillRect(-state.distance[0], -state.distance[1], height, width);
-    ctx.fillRect(-height/2, -width/2, height, width);
-    ctx.closePath();
+    //ctx.fillRect(-height/2, -width/2, height, width);
     ctx.restore();
     //ctx.fillRect(state.distance[0]-width/20, state.distance[1]-height/2, width, height);
 
+}
+
+
+
+function draw_state(state) {
+    const width = 20;
+    const height = 80;
+
+    const canvas = document.getElementById("canvas-refreshing");
+    const ctx = canvas.getContext("2d");
+
+    ctx.save();
+    ctx.translate(state.distance[0], state.distance[1]);
+    
+    ctx.rotate(-state.orientation[0]);
+    
+    ctx.beginPath();
+    ctx.fillStyle = 'red';
+    ctx.fillRect(-height/2, -width/2, height, width);
+    ctx.closePath();
+    ctx.restore();
 }
 
 
@@ -92,18 +111,23 @@ let right_pressed = false;
 let startTime = null;
 let last_timestamp = null;
 
+
+const initial_v = [200, 80];
+const initial_orient = [Math.PI - Math.tan(initial_v[1]/initial_v[0])];
+console.log(toRad(initial_v[1]/initial_v[0]));
 // state vectors 
 let state = {
-    distance: [400, 400],
-    velocity: [0, 0],
+    distance: [100, 100],
+    velocity: initial_v,
+    //velocity: [0, 0],
     acceleration: [0, 0],
-    orientation: [Math.PI/2],
+    orientation: initial_orient, 
     angular_velocity: [0],
     angular_acceleration: [0]
 }
 
 
-const main_engine_accel = 100; // meter per second ? 
+const main_engine_accel = 150; // meter per second ? 
 const orientation_jet_acceleration = Math.PI / 2; // PI/8 per second
 const d_a_gravity = [0, 40]; // positive downward
 
@@ -135,8 +159,9 @@ function step(timestamp) {
     }
     
     state = get_next_state(d_t_seconds, state, d_a, d_a_a);
-    
-    draw_state(state);
+   
+    draw_image_lander(state); 
+    //draw_state(state);
 
     last_timestamp = timestamp;
     window.requestAnimationFrame(step);
@@ -162,10 +187,23 @@ window.onload = function () {
 			up_pressed = false;
 		}
 	});
+
+	resizeCanvasToDisplaySize();
     
     window.requestAnimationFrame(step);
 }
 
+function resizeCanvasToDisplaySize() {
+	const canvas = document.getElementById("canvas-refreshing");
+   const width = canvas.clientWidth;
+   const height = canvas.clientHeight;
+
+   // If it's resolution does not match change it
+   if (canvas.width !== width || canvas.height !== height) {
+     canvas.width = width;
+     canvas.height = height;
+   }
+}
 
 
 
