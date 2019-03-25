@@ -56,26 +56,40 @@ function draw_image_lander(state) {
    // const img = new Image(); 
     //img.src = 'lander.svg';
     //
-    //
-
     const img = document.getElementById("lander");
 
     const canvas = document.getElementById("canvas-refreshing");
     const ctx = canvas.getContext("2d");
 
+    ctx.save();
+    ctx.translate(state.distance[0], state.distance[1]);
+   
+    // svg is offset for 0 orientation by PI/2 
+    ctx.rotate(-state.orientation[0] + Math.PI/2);
+
+    // x, y
+    ctx.drawImage(img, -img.width/2, -img.height/2);
+    ctx.restore();
+}
+
+
+function draw_fire(state) {
+    const fire = new Image(); 
+    fire .src = 'fire.svg';
+
+    const lander = document.getElementById("lander");
+
+    const canvas = document.getElementById("canvas-refreshing");
+    const ctx = canvas.getContext("2d");
 
     ctx.save();
     ctx.translate(state.distance[0], state.distance[1]);
-    
-    ctx.rotate(-state.orientation[0]);
    
+    // svg is offset for 0 orientation by PI/2 
+    ctx.rotate(-state.orientation[0] + Math.PI/2);
 
-    ctx.drawImage(img, -img.height/2, -img.width/2);
-    //ctx.fillRect(-state.distance[0], -state.distance[1], height, width);
-    //ctx.fillRect(-height/2, -width/2, height, width);
+    ctx.drawImage(fire, -fire.width/2, + lander.height/3 - fire.height/2);
     ctx.restore();
-    //ctx.fillRect(state.distance[0]-width/20, state.distance[1]-height/2, width, height);
-
 }
 
 
@@ -108,10 +122,12 @@ let right_pressed = false;
 let startTime = null;
 let last_timestamp = null;
 
-
 const initial_v = [200, 80];
 const initial_orient = [Math.PI - Math.tan(initial_v[1]/initial_v[0])];
-console.log(toRad(initial_v[1]/initial_v[0]));
+
+//const initial_v = [0, 0];
+//const initial_orient = [0];
+
 // state vectors 
 let state = {
     distance: [100, 100],
@@ -126,6 +142,7 @@ let state = {
 
 const main_engine_accel = 150; // meter per second ? 
 const orientation_jet_acceleration = Math.PI / 2; // PI/8 per second
+//const d_a_gravity = [0, 0]; // positive downward
 const d_a_gravity = [0, 40]; // positive downward
 
 const pixel_per_meter = 4;
@@ -156,7 +173,10 @@ function step(timestamp) {
     }
     
     state = get_next_state(d_t_seconds, state, d_a, d_a_a);
-   
+  
+    if (up_pressed) {
+        draw_fire(state);
+    } 
     draw_image_lander(state); 
     //draw_state(state);
 
