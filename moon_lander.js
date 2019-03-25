@@ -172,21 +172,21 @@ const A = 65
 const D = 68
 window.onload = function () {
 	window.addEventListener("keydown", event => {
-		if (event.keyCode === LEFT_ARROW || event.keyCode === W) {
+		if (event.keyCode === LEFT_ARROW || event.keyCode === A) {
 			left_pressed = true;
 		} else if (event.keyCode === RIGHT_ARROW || event.keyCode === D) {
 			right_pressed = true;
-		} else if (event.keyCode === UP_ARROW || event.keyCode === A) {
+		} else if (event.keyCode === UP_ARROW || event.keyCode === W) {
 			up_pressed = true;
 		}
 	});
 	
 	window.addEventListener("keyup", event => {
-		if (event.keyCode === LEFT_ARROW || event.keyCode === W) {
+		if (event.keyCode === LEFT_ARROW || event.keyCode === A) {
 			left_pressed = false;
 		} else if (event.keyCode === RIGHT_ARROW || event.keyCode === D) {
 			right_pressed = false;
-		} else if (event.keyCode === UP_ARROW || event.keyCode === A) {
+		} else if (event.keyCode === UP_ARROW || event.keyCode === W) {
 			up_pressed = false;
 		}
 	});
