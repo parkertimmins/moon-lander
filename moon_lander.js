@@ -15,7 +15,7 @@ function scale_add(d_t, a, old_v) {
 }
 
 // change in time, acceleration, and angular acceleration
-function get_next_state(d_t, state, d_a, d_a_a) {
+function get_next_state(d_t, state, d_a, d_a_a, up_pressed) {
   
     // assume that change in acceleration applies to all of d_t
     const acceleration = combine_acceleration(state.acceleration, d_a);
@@ -25,6 +25,13 @@ function get_next_state(d_t, state, d_a, d_a_a) {
     const angular_acceleration = combine_acceleration(state.angular_acceleration, d_a_a);
     const angular_velocity = scale_add(d_t, angular_acceleration, state.angular_velocity);
     const orientation = scale_add(d_t, angular_velocity, state.orientation);
+  
+    let fuel;
+    if (up_pressed) {
+        fuel = state.fuel - d_t < 0 ? 0 : state.fuel - d_t;
+    } else {
+        fuel = state.fuel;
+    }
 
     return {
         distance,
@@ -32,7 +39,8 @@ function get_next_state(d_t, state, d_a, d_a_a) {
         acceleration,
         orientation,
         angular_velocity,
-        angular_acceleration
+        angular_acceleration,
+        fuel
     }
 }
 
@@ -52,6 +60,10 @@ function draw_square(right, down, square_size, color) {
     ctx.closePath();
 }
 
+function wrap_width(width, x) {
+    return ((x % width) + width) % width
+}
+
 function draw_image_lander(state) {
    // const img = new Image(); 
     //img.src = 'lander.svg';
@@ -62,7 +74,8 @@ function draw_image_lander(state) {
     const ctx = canvas.getContext("2d");
 
     ctx.save();
-    ctx.translate(state.distance[0], state.distance[1]);
+
+    ctx.translate(wrap_width(canvas.width, state.distance[0]), state.distance[1]);
    
     // svg is offset for 0 orientation by PI/2 
     ctx.rotate(-state.orientation[0] + Math.PI/2);
@@ -71,6 +84,7 @@ function draw_image_lander(state) {
     ctx.drawImage(img, -img.width/2, -img.height/2);
     ctx.restore();
 }
+
 
 
 function draw_fire(state) {
@@ -83,7 +97,7 @@ function draw_fire(state) {
     const ctx = canvas.getContext("2d");
 
     ctx.save();
-    ctx.translate(state.distance[0], state.distance[1]);
+    ctx.translate(wrap_width(canvas.width, state.distance[0]), state.distance[1]);
    
     // svg is offset for 0 orientation by PI/2 
     ctx.rotate(-state.orientation[0] + Math.PI/2);
@@ -93,6 +107,79 @@ function draw_fire(state) {
 }
 
 
+function draw_hud(state) {
+    
+    const canvas = document.getElementById("canvas-refreshing");
+    const ctx = canvas.getContext("2d");
+   
+    const hud_margin = 5; 
+    const hud_width = 300;
+    const hud_height = 200;
+    const hud_location = [canvas.width - hud_width - hud_margin, 0 + hud_margin];
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#095835";
+    ctx.beginPath();
+    ctx.rect(hud_location[0], hud_location[1], hud_width, hud_height);
+    ctx.stroke();
+    ctx.closePath();
+
+    // draw orientation arrow 
+    const arrow_diameter = (hud_height / 2) * 0.6;
+    const arrow_circle_radius = ((hud_height / 2) * 0.7) / 2;
+    const arrow_width = arrow_diameter / 8;
+    const arrow_center = [hud_location[0] + hud_width / 4, hud_location[1] + 3 * hud_height / 4];
+   
+    // translate to arrow center;
+    ctx.save();
+    ctx.translate(arrow_center[0], arrow_center[1]);
+
+    // draw arrow bounding circle
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "grey";
+    ctx.beginPath();
+    ctx.moveTo(arrow_circle_radius, 0);
+    ctx.arc(0, 0, arrow_circle_radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.rotate(-state.orientation[0]);
+    
+    ctx.fillStyle = "#0e0c4f";
+    ctx.strokeStyle = "#0e0c4f";
+    
+    // draw rectangle
+    ctx.fillRect(-arrow_diameter/2, -arrow_width/2, (3/4) * arrow_diameter + 1, arrow_width);
+    // draw triangle
+    ctx.beginPath();
+    ctx.moveTo(arrow_diameter/4,  arrow_diameter/4);
+    ctx.lineTo(arrow_diameter/2,  0);
+    ctx.lineTo(arrow_diameter/4,  -arrow_diameter/4);
+    ctx.fill();
+    ctx.closePath();
+    
+    ctx.restore();
+
+    const fuel_bar_width = hud_width * 0.8;
+    const fuel_bar_height = hud_height / 6;
+    const fuel_bar_offset_x = (hud_width - fuel_bar_width) / 2;
+    const fuel_bar_offset_y =  hud_height / 6;
+   
+    // fuel usage 
+    const percentFuelUsed = state.fuel / initial_fuel_time; 
+    ctx.fillStyle = "orange";
+    ctx.fillRect(hud_location[0] + fuel_bar_offset_x, hud_location[1] + fuel_bar_offset_y, fuel_bar_width * percentFuelUsed, fuel_bar_height);
+    
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "grey";
+    ctx.beginPath();
+    ctx.rect(hud_location[0] + fuel_bar_offset_x, hud_location[1] + fuel_bar_offset_y, fuel_bar_width, fuel_bar_height);
+    ctx.stroke(); 
+    ctx.closePath();
+
+
+
+}
 
 function draw_state(state) {
     const width = 20;
@@ -122,6 +209,8 @@ let right_pressed = false;
 let startTime = null;
 let last_timestamp = null;
 
+const initial_fuel_time = 3; // seconds
+
 const initial_v = [200, 80];
 const initial_orient = [Math.PI - Math.tan(initial_v[1]/initial_v[0])];
 
@@ -136,7 +225,9 @@ let state = {
     acceleration: [0, 0],
     orientation: initial_orient, 
     angular_velocity: [0],
-    angular_acceleration: [0]
+    angular_acceleration: [0],
+
+    fuel: initial_fuel_time 
 }
 
 
@@ -160,7 +251,8 @@ function step(timestamp) {
    
     const d_t_seconds = (timestamp - last_timestamp) / 1000;
 
-    const d_a_engine = up_pressed ? [Math.cos(state.orientation) * main_engine_accel, -Math.sin(state.orientation) * main_engine_accel] : [0, 0]
+    const accelerating = up_pressed && state.fuel > 0;
+    const d_a_engine = accelerating ? [Math.cos(state.orientation) * main_engine_accel, -Math.sin(state.orientation) * main_engine_accel] : [0, 0]
     const d_a = d_a_engine.map((c, i) => c + d_a_gravity[i]);
 
     let d_a_a;
@@ -172,11 +264,12 @@ function step(timestamp) {
         d_a_a = [0];
     }
     
-    state = get_next_state(d_t_seconds, state, d_a, d_a_a);
+    state = get_next_state(d_t_seconds, state, d_a, d_a_a, up_pressed);
   
-    if (up_pressed) {
+    if (accelerating) {
         draw_fire(state);
     } 
+    draw_hud(state);
     draw_image_lander(state); 
     //draw_state(state);
 
