@@ -65,10 +65,8 @@ function wrap_width(width, x) {
 }
 
 function draw_image_lander(state) {
-   // const img = new Image(); 
-    //img.src = 'lander.svg';
-    //
-    const img = document.getElementById("lander");
+    const img = new Image(); 
+    img.src = 'lander.svg';
 
     const canvas = document.getElementById("canvas-refreshing");
     const ctx = canvas.getContext("2d");
@@ -89,9 +87,9 @@ function draw_image_lander(state) {
 
 function draw_fire(state) {
     const fire = new Image(); 
-    fire .src = 'fire.svg';
-
-    const lander = document.getElementById("lander");
+    fire.src = 'fire.svg';
+    const lander = new Image();
+    lander.src = 'lander.svg';
 
     const canvas = document.getElementById("canvas-refreshing");
     const ctx = canvas.getContext("2d");
@@ -209,7 +207,7 @@ let right_pressed = false;
 let startTime = null;
 let last_timestamp = null;
 
-const initial_fuel_time = 3; // seconds
+const initial_fuel_time = 20; // seconds
 
 const initial_v = [200, 80];
 const initial_orient = [Math.PI - Math.tan(initial_v[1]/initial_v[0])];
