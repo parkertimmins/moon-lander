@@ -50,18 +50,34 @@ function clear_canvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function draw_square(right, down, square_size, color) {
-    const canvas = document.getElementById("canvas-refreshing");
-    var ctx = canvas.getContext("2d");
-    ctx.beginPath();
-    ctx.fillStyle = color;
-    ctx.fillRect(right, down, square_size, square_size);
-    ctx.stroke();
-    ctx.closePath();
-}
 
 function wrap_width(width, x) {
     return ((x % width) + width) % width
+}
+
+function draw_lander_html(state) {
+	let lander = document.querySelector(".lander");
+    let screenWidth = document.querySelector("#canvas-wrapper").offsetWidth;
+
+    
+    
+
+
+	// translate
+	lander.style.top = (state.distance[1] - lander.offsetHeight / 2) + 'px' // TODO fix center offset
+	lander.style.left = (wrap_width(screenWidth, state.distance[0]) - lander.offsetWidth / 2) + 'px'; // TODO fix width offset
+	
+    // rotate 
+    lander.style.transform = `rotate(${-state.orientation[0] + Math.PI/2}rad)`;
+
+    lander.style.display = 'block';
+
+
+
+    // x, y
+    //ctx.drawImage(img, -img.width/2, -img.height/2);
+    //ctx.restore();
+
 }
 
 function draw_image_lander(state) {
@@ -83,8 +99,6 @@ function draw_image_lander(state) {
     ctx.restore();
 }
 
-
-
 function draw_fire(state) {
     const fire = new Image(); 
     fire.src = 'fire.svg';
@@ -103,7 +117,6 @@ function draw_fire(state) {
     ctx.drawImage(fire, -fire.width/2, + lander.height/3 - fire.height/2);
     ctx.restore();
 }
-
 
 function draw_hud(state) {
     
@@ -174,9 +187,6 @@ function draw_hud(state) {
     ctx.rect(hud_location[0] + fuel_bar_offset_x, hud_location[1] + fuel_bar_offset_y, fuel_bar_width, fuel_bar_height);
     ctx.stroke(); 
     ctx.closePath();
-
-
-
 }
 
 function draw_state(state) {
@@ -188,7 +198,6 @@ function draw_state(state) {
 
     ctx.save();
     ctx.translate(state.distance[0], state.distance[1]);
-    
     ctx.rotate(-state.orientation[0]);
     
     ctx.beginPath();
@@ -199,16 +208,15 @@ function draw_state(state) {
 }
 
 
-
 let up_pressed = false;
 let left_pressed = false;
 let right_pressed = false;
+let paused = false;
 
 let startTime = null;
 let last_timestamp = null;
 
 const initial_fuel_time = 20; // seconds
-
 const initial_v = [200, 80];
 const initial_orient = [Math.PI - Math.tan(initial_v[1]/initial_v[0])];
 
@@ -228,15 +236,12 @@ let state = {
     fuel: initial_fuel_time 
 }
 
-
 const main_engine_accel = 150; // meter per second ? 
 const orientation_jet_acceleration = Math.PI / 2; // PI/8 per second
 //const d_a_gravity = [0, 0]; // positive downward
 const d_a_gravity = [0, 40]; // positive downward
 
 const pixel_per_meter = 4;
-
-
 
 function step(timestamp) {
 
@@ -261,15 +266,16 @@ function step(timestamp) {
     } else {
         d_a_a = [0];
     }
-    
-    state = get_next_state(d_t_seconds, state, d_a, d_a_a, up_pressed);
+  
+    if (!paused) { 
+        state = get_next_state(d_t_seconds, state, d_a, d_a_a, up_pressed);
+    }
   
     if (accelerating) {
         draw_fire(state);
     } 
     draw_hud(state);
-    draw_image_lander(state); 
-    //draw_state(state);
+	draw_lander_html(state);
 
     last_timestamp = timestamp;
     window.requestAnimationFrame(step);
@@ -278,29 +284,29 @@ function step(timestamp) {
 const LEFT_ARROW = 37
 const UP_ARROW = 38
 const RIGHT_ARROW = 39
-const W = 87
-const A = 65
-const D = 68
+const SPACE_BAR = 32;
 window.onload = function () {
 	window.addEventListener("keydown", event => {
-		if (event.keyCode === LEFT_ARROW || event.keyCode === A) {
+		if (event.keyCode === LEFT_ARROW) {
 			left_pressed = true;
-		} else if (event.keyCode === RIGHT_ARROW || event.keyCode === D) {
+		} else if (event.keyCode === RIGHT_ARROW) {
 			right_pressed = true;
-		} else if (event.keyCode === UP_ARROW || event.keyCode === W) {
+		} else if (event.keyCode === UP_ARROW) {
 			up_pressed = true;
 		}
 	});
 	
 	window.addEventListener("keyup", event => {
-		if (event.keyCode === LEFT_ARROW || event.keyCode === A) {
+		if (event.keyCode === LEFT_ARROW) {
 			left_pressed = false;
-		} else if (event.keyCode === RIGHT_ARROW || event.keyCode === D) {
+		} else if (event.keyCode === RIGHT_ARROW) {
 			right_pressed = false;
-		} else if (event.keyCode === UP_ARROW || event.keyCode === W) {
+		} else if (event.keyCode === UP_ARROW) {
 			up_pressed = false;
-		}
-	});
+		} else if (event.keyCode === SPACE_BAR) {
+            paused = !paused;
+        } 
+    });
 
 	resizeCanvasToDisplaySize();
     
@@ -309,15 +315,13 @@ window.onload = function () {
 
 function resizeCanvasToDisplaySize() {
 	const canvas = document.getElementById("canvas-refreshing");
-   const width = canvas.clientWidth;
-   const height = canvas.clientHeight;
+	const width = canvas.clientWidth;
+	const height = canvas.clientHeight;
 
-   // If it's resolution does not match change it
-   if (canvas.width !== width || canvas.height !== height) {
-     canvas.width = width;
-     canvas.height = height;
-   }
+	// If it's resolution does not match change it
+	if (canvas.width !== width || canvas.height !== height) {
+		canvas.width = width;
+	     	canvas.height = height;
+	}
 }
-
-
 
