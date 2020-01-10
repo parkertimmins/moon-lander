@@ -1,6 +1,7 @@
 
 
 body {
+    margin: 0;
     background: #607d8b;
     display: flex;
     flex-direction: column;
@@ -46,11 +47,60 @@ body {
 
 
 /* ___________________ Lander _____________________ */
+
+.lander-testing {
+    width: 300px;
+    height: 800px;
+    display: block;  
+}
+
+.lander-prod {
+	width: 60px;
+	height: 160px;
+}
+
 .lander {
 	margin: 0;
-	width: 50px;
-	height: 150px; 
 	position: relative;
+}
+
+.fire {
+	position: absolute;
+    top: 75%;
+	
+	svg polygon {
+		transform-origin: top center;
+		&:nth-child(1) {
+			fill: red;
+			transform: rotate(10deg);
+		}	
+		&:nth-child(2) {
+			fill: yellow;
+			transform: rotate(-10deg);
+		}
+		&:nth-child(3) {
+			fill: orange;
+		}
+	}
+}
+
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.window {
+    background: linear-gradient(to right, #00a1ff, #0b30e5);
+    border: 2px grey solid;
+   	width: 15%;
+    height: 15%;
+    position: absolute;
+    border-radius: 50%/50%;     
+    
+
+	top: 55%;
+    left: 10%;
 }
 
 .cylinder {
@@ -60,15 +110,13 @@ body {
 	width: 100%;
 	height: 70%;
 
-	background-color: #189399;
-
 	border-top-left-radius: 50% 50%;
 	border-top-right-radius: 50% 50%;
 
 	border-bottom-left-radius: 50% 8%;
 	border-bottom-right-radius: 50% 8%;
 
-	background: linear-gradient(to right, #189399, #072a2c);
+	background: linear-gradient(to right, #c31daf, #072a2c);
 }
 .cylinder:before {
 	position: absolute;
@@ -84,8 +132,8 @@ body {
 }
 
 .legs {
-	position: relative;
-	top: -5%;
+    position: absolute;
+    top: 73%;
 	margin: auto;
 	width: 100%;
 	height: 22%;
@@ -108,9 +156,6 @@ body {
 .center {
 	display: none;
 	position: relative;
-/* 	top: -3%; */
-/* 	transform: rotate(-2deg); */
-	
 }
 
 .leg {
@@ -160,7 +205,7 @@ body {
 	height: 10%;
 	margin-top: -10%;
 	z-index: 20;
-  	background: linear-gradient(to right, gray, black);
+  	background: linear-gradient(to right, #adadad, #403f3f);
 	
 	border-bottom-left-radius: 60% 20%;
 	border-bottom-right-radius: 60% 20%;

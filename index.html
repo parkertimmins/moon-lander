@@ -10,37 +10,10 @@
         <div id="canvas-wrapper">
             <canvas id="canvas-refreshing"></canvas>
 
-
-			<div class="lander">
-				<div class="cap"></div>
-				<div class="cylinder"></div>
-				<div class="engine-bell"></div>
-				<div class="legs">
-						
-						<div class="leg left">
-							<div class="stick"></div>
-							<div class="base">
-								<div class="base-top"></div>
-							</div>					
-						</div>
-						<div class="leg center">
-							<div class="stick"></div>
-							<div class="base">
-								<div class="base-top"></div>
-							</div>					
-						</div>
-						<div class="leg right">
-							<div class="stick"></div>
-							<div class="base">
-								<div class="base-top"></div>
-							</div>					
-						</div>
-				</div>
-			</div>		
-
+            {% include lander.html extra-class="lander-prod" %}
+			
         </div>
-	
 
-        <script src="moon_lander.js"></script>
+        <script src="assets/js/moon_lander.js"></script>
     </body>
 </html>

@@ -59,25 +59,14 @@ function draw_lander_html(state) {
 	let lander = document.querySelector(".lander");
     let screenWidth = document.querySelector("#canvas-wrapper").offsetWidth;
 
-    
-    
-
-
 	// translate
-	lander.style.top = (state.distance[1] - lander.offsetHeight / 2) + 'px' // TODO fix center offset
-	lander.style.left = (wrap_width(screenWidth, state.distance[0]) - lander.offsetWidth / 2) + 'px'; // TODO fix width offset
+	lander.style.top = (state.distance[1] - lander.offsetHeight / 2) + 'px';
+	lander.style.left = (wrap_width(screenWidth, state.distance[0]) - lander.offsetWidth / 2) + 'px';
 	
     // rotate 
     lander.style.transform = `rotate(${-state.orientation[0] + Math.PI/2}rad)`;
 
     lander.style.display = 'block';
-
-
-
-    // x, y
-    //ctx.drawImage(img, -img.width/2, -img.height/2);
-    //ctx.restore();
-
 }
 
 function draw_image_lander(state) {
@@ -99,24 +88,11 @@ function draw_image_lander(state) {
     ctx.restore();
 }
 
-function draw_fire(state) {
-    const fire = new Image(); 
-    fire.src = 'fire.svg';
-    const lander = new Image();
-    lander.src = 'lander.svg';
-
-    const canvas = document.getElementById("canvas-refreshing");
-    const ctx = canvas.getContext("2d");
-
-    ctx.save();
-    ctx.translate(wrap_width(canvas.width, state.distance[0]), state.distance[1]);
-   
-    // svg is offset for 0 orientation by PI/2 
-    ctx.rotate(-state.orientation[0] + Math.PI/2);
-
-    ctx.drawImage(fire, -fire.width/2, + lander.height/3 - fire.height/2);
-    ctx.restore();
+function draw_fire(should_draw_fire, state) {
+	let fire = document.querySelector(".fire");
+    fire.style.visibility = should_draw_fire ? 'visible' : 'hidden';
 }
+
 
 function draw_hud(state) {
     
@@ -271,12 +247,10 @@ function step(timestamp) {
         state = get_next_state(d_t_seconds, state, d_a, d_a_a, up_pressed);
     }
   
-    if (accelerating) {
-        draw_fire(state);
-    } 
     draw_hud(state);
 	draw_lander_html(state);
-
+    draw_fire(accelerating, state);
+    
     last_timestamp = timestamp;
     window.requestAnimationFrame(step);
 }
