@@ -89,8 +89,9 @@ function draw_image_lander(state) {
 }
 
 function draw_fire(should_draw_fire, state) {
-	let fire = document.querySelector(".fire");
-    fire.style.visibility = should_draw_fire ? 'visible' : 'hidden';
+	document.querySelectorAll(".fire").forEach(fire => {
+        fire.style.visibility = should_draw_fire ? 'visible' : 'hidden';
+    });
 }
 
 
