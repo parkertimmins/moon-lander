@@ -1,4 +1,6 @@
 
+$T: transparent;
+$dg: #2a2a2a;
 
 body {
     margin: 0;
@@ -168,42 +170,40 @@ body {
 
     }
 
+	.engine {
+		width: 30%;
+		height: 20%;
+		margin: auto;
 
-    .engine-bell {
-        position: relative;
-        margin: auto;
-        width: 25%;
-        height: 10%;
-        margin-top: -10%;
-        z-index: 20;
-        background: linear-gradient(to right, #adadad, #403f3f);
-        
-        border-bottom-left-radius: 60% 20%;
-        border-bottom-right-radius: 60% 20%;
-        transform: perspective(9vw) rotateX(30deg);
+		.bell {
+			width: 100%;
+			height: 50%;
 
-    }
+			z-index: 10;
+			position: relative;
+			border-bottom-left-radius: 50% 20%;
+			border-bottom-right-radius: 50% 20%;
+			
+			background:         
+				linear-gradient(105deg,  $T 30%, $dg 31%, grey 60%) top left / 52% 100%, /* 52% b/c when only 50 a space shows up in between */
+				linear-gradient(-105deg, $T 30%, $dg 31%, grey 60%) top right / 52% 100%;
+				
+			background-repeat: no-repeat;
+		}
+	 
+		.fire {
+			position: relative;
+			margin: -10% auto auto auto;
+			z-index: 5;
+			width: 90%;
+			height: 90%;
+			background:         
+				linear-gradient(75deg,  $T 50%, red 60%, orange 70%, yellow 80%, white 90%) top left / 51% 100%,
+				linear-gradient(-75deg, $T 50%, red 60%, orange 70%, yellow 80%, white 90%) top right / 51% 100%;
+			background-repeat: no-repeat;
+		}
+	}
 
-
-    .fire {
-        position: absolute;
-        top: 75%;
-        
-        svg polygon {
-            transform-origin: top center;
-            &:nth-child(1) {
-                fill: red;
-                transform: rotate(10deg);
-            }	
-            &:nth-child(2) {
-                fill: yellow;
-                transform: rotate(-10deg);
-            }
-            &:nth-child(3) {
-                fill: orange;
-            }
-        }
-    }
 
     .legs {
         position: absolute;

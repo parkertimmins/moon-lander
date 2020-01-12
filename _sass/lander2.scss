@@ -1,6 +1,8 @@
 
 $lg: #00ffff;
 $T: transparent;
+$dg: #2a2a2a;
+
 
 $h_over_width: 350 / 400;
 
@@ -114,8 +116,8 @@ $h_over_width: 350 / 400;
             border-bottom-right-radius: 50% 20%;
             
             background: 		
-                linear-gradient(105deg,  $T 30%, black 31%, grey 60%) top left / 52% 100%, /* 52% b/c when only 50 a space shows up in between */
-                linear-gradient(-105deg, $T 30%, black 31%, grey 60%) top right / 52% 100%;
+                linear-gradient(105deg,  $T 30%, $dg 31%, grey 60%) top left / 52% 100%, /* 52% b/c when only 50 a space shows up in between */
+                linear-gradient(-105deg, $T 30%, $dg 31%, grey 60%) top right / 52% 100%;
                 
             background-repeat: no-repeat;
         }
