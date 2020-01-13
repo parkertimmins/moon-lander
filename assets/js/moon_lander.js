@@ -96,92 +96,11 @@ function draw_fire(should_draw_fire, state) {
 
 
 function draw_hud(state) {
-    
-    const canvas = document.getElementById("canvas-refreshing");
-    const ctx = canvas.getContext("2d");
-   
-    const hud_margin = 5; 
-    const hud_width = 300;
-    const hud_height = 200;
-    const hud_location = [canvas.width - hud_width - hud_margin, 0 + hud_margin];
-
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#095835";
-    ctx.beginPath();
-    ctx.rect(hud_location[0], hud_location[1], hud_width, hud_height);
-    ctx.stroke();
-    ctx.closePath();
-
-    // draw orientation arrow 
-    const arrow_diameter = (hud_height / 2) * 0.6;
-    const arrow_circle_radius = ((hud_height / 2) * 0.7) / 2;
-    const arrow_width = arrow_diameter / 8;
-    const arrow_center = [hud_location[0] + hud_width / 4, hud_location[1] + 3 * hud_height / 4];
-   
-    // translate to arrow center;
-    ctx.save();
-    ctx.translate(arrow_center[0], arrow_center[1]);
-
-    // draw arrow bounding circle
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "grey";
-    ctx.beginPath();
-    ctx.moveTo(arrow_circle_radius, 0);
-    ctx.arc(0, 0, arrow_circle_radius, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.closePath();
-
-    ctx.rotate(-state.orientation[0]);
-    
-    ctx.fillStyle = "#0e0c4f";
-    ctx.strokeStyle = "#0e0c4f";
-    
-    // draw rectangle
-    ctx.fillRect(-arrow_diameter/2, -arrow_width/2, (3/4) * arrow_diameter + 1, arrow_width);
-    // draw triangle
-    ctx.beginPath();
-    ctx.moveTo(arrow_diameter/4,  arrow_diameter/4);
-    ctx.lineTo(arrow_diameter/2,  0);
-    ctx.lineTo(arrow_diameter/4,  -arrow_diameter/4);
-    ctx.fill();
-    ctx.closePath();
-    
-    ctx.restore();
-
-    const fuel_bar_width = hud_width * 0.8;
-    const fuel_bar_height = hud_height / 6;
-    const fuel_bar_offset_x = (hud_width - fuel_bar_width) / 2;
-    const fuel_bar_offset_y =  hud_height / 6;
-   
-    // fuel usage 
-    const percentFuelUsed = state.fuel / initial_fuel_time; 
-    ctx.fillStyle = "orange";
-    ctx.fillRect(hud_location[0] + fuel_bar_offset_x, hud_location[1] + fuel_bar_offset_y, fuel_bar_width * percentFuelUsed, fuel_bar_height);
-    
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "grey";
-    ctx.beginPath();
-    ctx.rect(hud_location[0] + fuel_bar_offset_x, hud_location[1] + fuel_bar_offset_y, fuel_bar_width, fuel_bar_height);
-    ctx.stroke(); 
-    ctx.closePath();
-}
-
-function draw_state(state) {
-    const width = 20;
-    const height = 80;
-
-    const canvas = document.getElementById("canvas-refreshing");
-    const ctx = canvas.getContext("2d");
-
-    ctx.save();
-    ctx.translate(state.distance[0], state.distance[1]);
-    ctx.rotate(-state.orientation[0]);
-    
-    ctx.beginPath();
-    ctx.fillStyle = 'red';
-    ctx.fillRect(-height/2, -width/2, height, width);
-    ctx.closePath();
-    ctx.restore();
+    const arrow = document.querySelector('.hud .arrow');
+    arrow.style.transform = `rotate(${-state.orientation[0] + Math.PI/2}rad)`;
+  
+    const fuel = document.querySelector('.hud .fuel');
+    fuel.style.width = `${(state.fuel / initial_fuel_time) * 100}%`;
 }
 
 
