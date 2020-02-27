@@ -1,0 +1,13 @@
+.lander2-test { position: relative; width: 500px; height: 437.5px; margin: auto; }
+
+.lander2-prod { width: 200px; height: 175px; display: none; }
+
+.lander2 { position: relative; }
+.lander2 .capsule { position: relative; width: 100%; height: 60%; z-index: 10; background: linear-gradient(180deg, #00ffff 10%, black 11%, black 13%, transparent 13%), linear-gradient(135deg, darkblue 50%, #0095ff) 0% 13%/100% 20%, linear-gradient(black, black) 0% 30%/100% 3%, linear-gradient(135deg, #00ffff 20%, black) 0% 33%/100% 100%; background-repeat: no-repeat; border-top-left-radius: 30% 50%; border-top-right-radius: 30% 50%; border-bottom-left-radius: 20% 50%; border-bottom-right-radius: 20% 50%; }
+.lander2 .capsule .door { width: 15%; height: 15%; position: absolute; border: 2px solid #5a5f73; top: 70%; left: 11%; border-top-left-radius: 20% 30%; border-top-right-radius: 20% 30%; border-bottom-left-radius: 50% 50%; border-bottom-right-radius: 20% 30%; background: linear-gradient(135deg, transparent 20%, black 150%); }
+.lander2 .ladder { z-index: 20; width: 5%; height: 23%; position: absolute; top: 53%; left: 18%; background: linear-gradient(to right, gold 0%, brown 15%, transparent 16%, transparent 84%, gold 85%, brown 100%), repeating-linear-gradient(transparent 10%, gold 10%, brown 15%, transparent 15%, transparent 30%); }
+.lander2 .legs { margin: auto; width: 90%; height: 20%; border-radius: 20%/30%; background: linear-gradient(to right, transparent 17%, grey 17%, black 20%, transparent 20%, transparent 80%, grey 80%, black 83%, transparent 83%) top left/100% 74%, linear-gradient(to top, black 0%, grey 25%, transparent 26%); background-repeat: no-repeat; display: flex; justify-content: center; }
+.lander2 .legs .leg { margin: auto; width: 8%; height: 100%; }
+.lander2 .legs .engine { width: 10%; height: 100%; }
+.lander2 .legs .bell { width: 100%; height: 50%; z-index: 10; position: relative; border-bottom-left-radius: 50% 20%; border-bottom-right-radius: 50% 20%; background: linear-gradient(105deg, transparent 30%, #2a2a2a 31%, grey 60%) top left/52% 100%, linear-gradient(-105deg, transparent 30%, #2a2a2a 31%, grey 60%) top right/52% 100%; background-repeat: no-repeat; }
+.lander2 .legs .fire { position: relative; margin: -10% auto auto auto; z-index: 5; width: 80%; height: 100%; background: linear-gradient(75deg, transparent 50%, red 60%, orange 80%) top left/51% 100%, linear-gradient(-75deg, transparent 50%, red 60%, orange 80%) top right/51% 100%; background-repeat: no-repeat; }

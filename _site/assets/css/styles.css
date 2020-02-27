@@ -1,0 +1,53 @@
+body { margin: 0; background: #607d8b; display: flex; flex-direction: column; align-items: center; height: 100vh; /* ? */ background: black; background-image: radial-gradient(#b6f3ff, rgba(255, 255, 255, 0.2) 2px, transparent 10px), radial-gradient(#b6f3ff, rgba(255, 255, 255, 0.15) 1px, transparent 5px), radial-gradient(white, rgba(255, 255, 255, 0.1) 2px, transparent 20px), radial-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1) 2px, transparent 5px); background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px; background-position: 0 0, 40px 60px, 130px 270px, 70px 100px; }
+
+#canvas-wrapper { position: relative; width: 100%; height: 100%; display: inline-block; overflow: hidden; }
+
+#controls { display: flex; }
+
+#controls div { margin: 0 20px 0 20px; }
+
+#controls input { display: block; }
+
+/***** hud ******/
+.hud { position: fixed; right: 0; margin: 5px; padding: 20px; border: 3px solid green; }
+.hud .meter { width: 250px; height: 30px; border: 4px solid grey; box-sizing: border-box; margin-bottom: 20px; }
+.hud .meter .fuel { height: 100%; background: orange; }
+.hud .rotation-meter { margin: 5px; width: 67px; height: 67px; border-radius: 50%; border: 2px solid white; display: flex; }
+.hud .rotation-meter .arrow { visibility: hidden; width: 90%; height: 90%; border-radius: 50%; background: green; margin: auto; background: linear-gradient(to top, blue 79%, transparent 80%) bottom center/20% 100%; background-repeat: no-repeat; }
+.hud .rotation-meter .arrow .head { margin: auto; width: 60%; height: 30%; background: linear-gradient(135deg, transparent 60%, blue 61%) top left/50% 100%, linear-gradient(-135deg, transparent 60%, blue 61%) top right/50% 100%; background-repeat: no-repeat; }
+
+/* crater */
+.crater:before { border-radius: 50%/50%; background: linear-gradient(to left, grey, black); height: 40%; width: 100%; content: ""; position: absolute; }
+
+.crater { position: relative; margin: auto; background: linear-gradient(to right, grey, black); border-top-left-radius: 60% 20%; border-top-right-radius: 60% 20%; border-bottom-left-radius: 60% 30%; border-bottom-right-radius: 60% 30%; }
+
+.crater-large { width: 50px; height: 25px; transform: perspective(1vw) rotateX(30deg); }
+
+.crater { width: 100px; height: 50px; transform: perspective(2vw) rotateX(40deg); }
+
+.pad { background: #ff000057; border-radius: 50%; border: 3px yellow; border-style: double; }
+
+/* ___________________ Planet ___________________ */
+.planet { width: 100%; height: 10%; border-top-left-radius: 60% 20%; border-top-right-radius: 60% 20%; bottom: 0; position: absolute; background: grey; }
+
+/* ___________________ Lander _____________________ */
+.lander { display: none; }
+
+.lander-testing { width: 300px; height: 800px; display: block; }
+
+.lander-prod { width: 60px; height: 160px; }
+
+.lander { margin: 0; position: relative; }
+.lander .cylinder { z-index: 100; position: relative; margin: 0 auto; width: 100%; height: 70%; border-top-left-radius: 50% 50%; border-top-right-radius: 50% 50%; border-bottom-left-radius: 50% 8%; border-bottom-right-radius: 50% 8%; background: linear-gradient(to right, #c31daf, #072a2c); }
+.lander .cylinder:before { position: absolute; left: 0; top: 0; margin: auto; height: 50%; /* 50% * 70% -ish */ width: 100%; border-radius: 50%/13%; content: ""; border-bottom: 2px solid #646464; }
+.lander .cylinder .window { background: linear-gradient(to right, #00a1ff, #0b30e5); border: 2px grey solid; width: 15%; height: 15%; position: absolute; border-radius: 50%/50%; top: 55%; left: 10%; }
+.lander .engine { width: 30%; height: 20%; margin: auto; }
+.lander .engine .bell { width: 100%; height: 50%; z-index: 10; position: relative; border-bottom-left-radius: 50% 20%; border-bottom-right-radius: 50% 20%; background: linear-gradient(105deg, transparent 30%, #2a2a2a 31%, grey 60%) top left/52% 100%, linear-gradient(-105deg, transparent 30%, #2a2a2a 31%, grey 60%) top right/52% 100%; background-repeat: no-repeat; }
+.lander .engine .fire { position: relative; margin: -10% auto auto auto; z-index: 5; width: 90%; height: 90%; background: linear-gradient(75deg, transparent 50%, red 60%, orange 70%, yellow 80%, white 90%) top left/51% 100%, linear-gradient(-75deg, transparent 50%, red 60%, orange 70%, yellow 80%, white 90%) top right/51% 100%; background-repeat: no-repeat; }
+.lander .legs { position: absolute; top: 73%; margin: auto; width: 100%; height: 22%; display: flex; flex-direction: row; justify-content: space-around; margin-top: -15%; }
+.lander .legs .left { transform: rotate(10deg); margin-right: 30%; }
+.lander .legs .right { transform: rotate(-10deg); }
+.lander .legs .leg { width: 25%; }
+.lander .legs .leg .stick { position: relative; z-index: 10; width: 17%; height: 60%; background: linear-gradient(to right, #ffd700, #433a07); margin: auto; }
+.lander .legs .leg .base { position: relative; top: -4%; width: 100%; height: 11%; border-top-left-radius: 50% 15%; border-top-right-radius: 50% 15%; border-bottom-left-radius: 50% 70%; border-bottom-right-radius: 50% 70%; background: linear-gradient(to right, #ffd700, #433a07); z-index: 5; }
+.lander .legs .leg .base .base-top { position: relative; width: 100%; height: 40%; border-radius: 50%/50%; background: linear-gradient(to left, #ffd700, #433a07); z-index: 10; }
